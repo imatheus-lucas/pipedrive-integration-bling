@@ -97,20 +97,30 @@ class CreateDealsService {
         });
   
         try {
-           const orderData = await bling.post(`https://bling.com.br/Api/v2/pedido/json/?apikey=1911cc604b316f8137bdde553ad751227b4180f5728445bdb50b88d6ed9a6c4e44be4bfd&xml=${xml}`);
-  
-           console.log(orderData)
-           return orderData;
-          // const { pedido } = orderData.data.retorno.pedidos[0];
-  
-          // pedido.value = deal.value;
-          // pedido.orgName = deal.org_id.name;
-  
-          // return pedido;
+           const orderData = await bling.post(`/pedido/json/?apikey=${process.env.BLING_KEY}&xml=${xml}`);
+           if(orderData.data.retorno.erros[0]){
+             throw new Error("Pedido ja cadastrado no sistema - Um pedido com o mesmo hash ja encontra-se cadastrado") 
+           }
+
+           const { pedido } = orderData.data.retorno.pedidos[0];
+
+           pedido.value = deal.value;
+           pedido.orgName = deal.org_id.name;
+   
+           return pedido;
+
+         
+        
         } catch (error) {
-          console.log("error")
+          console.log(error)
         };
       });
+      const cretedOrders = await Promise.all(orders).then((res) => {
+        const response = [res[res.length - 1]];
+        return response;
+      });
+      
+      return cretedOrders;
     }
 }
 export default CreateDealsService;
