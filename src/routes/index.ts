@@ -1,9 +1,8 @@
 import { Router } from 'express'
+import dealsController from '../app/controllers/dealsController';
 
 const router = Router();
 
-router.get("/", (req, res) =>{
-  return res.json('ok');
-})
+router.get("/deals", dealsController.getWonDeals);
 
 export default router;
