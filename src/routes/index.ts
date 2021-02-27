@@ -3,6 +3,10 @@ import dealsController from '../app/controllers/dealsController';
 
 const router = Router();
 
-router.get("/deals", dealsController.getWonDeals);
+router.post("/deals/won", dealsController.getWonDeals);
+router.get("/orders", dealsController.findOrderPerDate);
+
+
+
 
 export default router;
