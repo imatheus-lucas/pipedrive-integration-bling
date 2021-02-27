@@ -25,20 +25,22 @@ class DealsController {
       throw new AppError("error fetching data from pipedrive", 400);
     }
   }
-  async findAllOrder() {
+  async findAllOrder(req: Request, res: Response) {
     const orders = await Order.find();
 
     if (!orders) {
       return response.status(404).json({ message: "content not found" });
     }
-    return response.json(orders);
+    return res.json(orders);
   }
-  async findOrderPerDate() {
+  async findOrderPerDate(req: Request, res: Response) {
     const orders = await orderRepository.ordersPerDate();
+  
+    
     if (!orders) {
       return response.status(404).json({ message: "content not found" });
     }
-    return response.json(orders);
+    return res.json(orders);
   }
 }
 

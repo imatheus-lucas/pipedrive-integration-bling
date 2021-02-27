@@ -18,6 +18,7 @@ class SendOrderToblingService {
   async execute(deals: Array<ICreateDealsService>) {
     try {
       const orders = deals.map(async (deal) => {
+        
         const xml = convertOrderToXml({
           name: deal.owner_name,
           code: deal.id,

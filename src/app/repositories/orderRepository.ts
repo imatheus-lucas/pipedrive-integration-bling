@@ -37,31 +37,42 @@ class OrderRepository {
     return order;
   }
   async ordersPerDate() {
+    const date = new Date();
+    date.setHours(0, 0, 0, 0);
+
+    const outDate = new Date();
+    outDate.setHours(23, 59, 59, 59);
+
     const orders = await Order.aggregate([
       {
-        $sort: {
-          value: -1,
-        },
-      },
-      {
-        $project: {
-          id_order: "$id_order",
-          customer: {
-            company: "$company",
-            contact_person: "$contact_person",
-          },
-          item: {
-            code: "$code",
-            description: "$title",
-            currency: "$currency",
-            total_value: "$total_value",
+        $match: {
+          created_at: {
+            $gt: date,
+            $lt: outDate,
           },
         },
       },
       {
-        _id: "$id",
-        orders: {
-          $push: "$$ROOT",
+        $group: {
+          _id: null,
+          orders: {
+            $push: {
+              id_order: "$id_order",
+              customer: {
+                company: "$customer.company",
+                contact_person: "$customer.contact_person",
+              },
+              item: {
+                code: "$item.code",
+                description: "$item.description",
+                currency: "$item.currency",
+                total_value: "$item.total_value",
+              },
+            },
+          },
+          total_currency: {
+            $sum: "$item.total_value"
+          }
         },
       },
     ]);

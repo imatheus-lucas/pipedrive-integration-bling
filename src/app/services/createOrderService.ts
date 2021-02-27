@@ -1,6 +1,6 @@
-import Order from "../../database/entities/Order";
 import OrderRepository from "../repositories/orderRepository";
 import AppError from "../errors/AppError";
+
 interface ICreateDealsService {
   id: number;
   title: number;
@@ -20,6 +20,7 @@ class CreateOrderService {
         const order = await OrderRepository.saveOrder(orders);
         return order;
       });
+
       const ordersSaved = await Promise.all(orders);
 
       return ordersSaved;
